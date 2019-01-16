@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		str = 'data-533531370d0a';
+		if (str.substring(0, 5) === 'data-') {
+			var data = [];
+			var strArray = str.split('');
+			strArray.splice(0, 5);
+			while (!(strArray === [])) {
+				data.push(parseInt(strArray.splice(0, 2), 16));
+			}
+			console.log(JSON.stringify(data));
+		} else {
+			console.log(str);
+		}
+	</script>
+</body>
+</html>

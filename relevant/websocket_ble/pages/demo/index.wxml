@@ -1,0 +1,35 @@
+<!--pages/demo/index.wxml-->
+<!-- <text>pages/demo/index.wxml</text> -->
+<view class='container'>
+  <view class='page-body'>
+    <view class='page-res-text'>{{responseText}}</view>
+    <view class='page-body-wording'>
+      <text class='page-body-text'>
+        click to send send
+      </text>
+    </view>
+    <view class='btn-area'>
+      <button bind:tap='sendMessage' type='primary' disabled="{{socketStatus != 'connected'}}" loading="{{loading}}">send</button>
+      <switch bind:change='toggleSocket' checked='{{isOpen}}'></switch>
+    </view>
+  </view>
+</view>
+
+<view class="content">
+  <view>
+    日志信息：<textarea style='border:1px solid #ccc'>{{msg}}</textarea>
+  </view>
+  <button type="primary" class="button" bindtap="bleInit">1 初始化蓝牙适配器</button>
+  <button type="primary" class="button" bindtap="bleAdapterState">2 本机蓝牙适配状态</button>
+  <button type="primary" class="button" bindtap="bleSearch">3搜索周边蓝牙设备</button>
+  <button type="primary" class="button" bindtap="bleGetDevices">4获取所有周边蓝牙设备信息</button>
+  <block wx:for="{{devices}}" wx:key="{{test}}">
+    <button type="primary" class="button" id="{{item.deviceId}}" style='background-color: red;' bindtap="bleConnect">5 连接蓝牙设备: {{item.name}}        </button>
+  </block>
+  <button type="primary" class="button" bindtap="bleStopSearch">5 停止搜索周边蓝牙设备</button>
+  <button type="primary" class="button" bindtap="bleDeviceServices">6 获取蓝牙设备所有 service</button>
+  <button type="primary" class="button" bindtap="bleDeviceCharacteristics">7 获取连接设备所有特征值</button>
+  <button type="primary" class="button" bindtap="bleNotifyCharacteristicValueChange">8 开启特征值改变通知</button>
+  <button type="primary" class="button" bindtap="bleRead">9 读取数据</button>
+  <button type="primary" class="button" bindtap="bleClose">0 断开蓝牙设备连接</button>
+</view>

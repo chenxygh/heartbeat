@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" id="content">
+	<button id="send">send</button>
+	<div id="container" style="height: 600px; width: 1200px"></div>
+	<script src="echarts.js"></script>
+	<script>
+		
+		var dom = document.getElementById("container");
+		var myChart = echarts.init(dom);
+		var app = {};
+		option = null;
+		function randomData() {
+			now = new Date(+now + oneDay);
+			value = value + Math.random() * 21 - 10;
+			return {
+				name: now.toString(),
+				value: [
+				[now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+				Math.round(value)
+				]
+			}
+		}
+
+		var data = [];
+		var now = +new Date(1997, 9, 3);
+		var oneDay = 24 * 3600 * 1000;
+		var value = Math.random() * 1000;
+		for (var i = 0; i < 1000; i++) {
+			data.push(randomData());
+		}
+
+		option = {
+			title: {
+				text: '动态数据 + 时间坐标轴'
+			},
+			tooltip: {
+				trigger: 'axis',
+				formatter: function (params) {
+					params = params[0];
+					var date = new Date(params.name);
+					return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+				},
+				axisPointer: {
+					animation: false
+				}
+			},
+			xAxis: {
+				type: 'time',
+				splitLine: {
+					show: false
+				}
+			},
+			yAxis: {
+				type: 'value',
+				boundaryGap: [0, '100%'],
+				splitLine: {
+					show: false
+				}
+			},
+			series: [{
+				name: '模拟数据',
+				type: 'line',
+				showSymbol: false,
+				hoverAnimation: false,
+				data: data
+			}]
+		};
+
+		if (option && typeof option === "object") {
+			myChart.setOption(option, true);
+		}
+
+		/* ========== websocket ========== */
+		var ws = null;
+		var newData = [512];
+		
+		ws = new WebSocket('ws://127.0.0.1:33333');
+		ws.onopen = function () {
+			ws.send("I'm coming");
+		};
+
+		send.onclick = function () {
+			ws.send(JSON.stringify({text: content.value, type: 'chat'}));
+		};
+
+		ws.onmessage = function (e) {
+			var fuckData = JSON.parse(e.data);
+			if (fuckData['sData']) {
+				var sData = JSON.parse(e.data).sData;
+				newData.push(sData.substring(1, sData.length));
+				console.log(newData);
+			} else {
+				console.log(fuckData);
+			}
+		};
+
+		// myChart.on('finished', function () {
+		// 	for (var i = 0; i < newData.length; i++) {
+		//         data.shift();
+		//         data.push(newData[i]);
+		//     }
+	 	//     newData = [];
+		// 	myChart.setOption({
+		// 	series: [{
+		// 			data: data
+		// 		}]
+		// 	});
+		// });
+
+		// 数据更新
+		setInterval(function () {
+			// randomData();
+			for (var i = 0; i < newData.length; i++) {
+		        data.shift();
+		        data.push(newData[i]);
+		    }
+		    newData = [];
+			myChart.setOption({
+				series: [{
+					data: data
+				}]
+			});
+		}, 1);
+		
+	</script>
+</body>
+</html>

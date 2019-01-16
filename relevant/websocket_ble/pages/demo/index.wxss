@@ -1,0 +1,8 @@
+/* pages/demo/index.wxss */
+.content {
+  margin: 0 10px;
+}
+ 
+.button {
+  margin: 10px;
+}
